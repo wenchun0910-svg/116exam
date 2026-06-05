@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>考試時程表 - 黑板粉筆風</title>
+  
+  <!-- 引入 Google Fonts: Klee One (具有手寫黑板字質感的字體) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- 引入 Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- 引入 Phosphor Icons (圖示庫) -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    :root {
+      /* 粉筆色彩系 */
+      --chalk-white: #f8fafc;
+      --chalk-yellow: #fef08a;
+      --chalk-red: #fca5a5;
+      --chalk-blue: #93c5fd;
+      --chalk-green: #86efac;
+      --chalk-purple: #d8b4fe;
+      --board-bg: #2a3431; /* 黑板底色 */
+    }
+    
+    body { 
+      font-family: 'Klee One', cursive, sans-serif; 
+      background-color: var(--board-bg);
+      color: var(--chalk-white);
+    }
+    
+    /* 自訂簡約滾動條 (粉筆灰風格) */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
+    
+    /* 黑板粉塵紋理背景 */
+    .chalkboard-bg {
+      background-color: #26302c;
+      background-image: 
+        radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px),
+        radial-gradient(circle, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
+    }
+
+    /* 粉筆字發光特效 */
+    .chalk-text {
+      text-shadow: 0px 0px 3px rgba(255, 255, 255, 0.4), 0px 0px 8px rgba(255, 255, 255, 0.1);
+    }
+    .chalk-text-yellow {
+      color: var(--chalk-yellow);
+      text-shadow: 0px 0px 4px rgba(254, 240, 138, 0.5);
+    }
+    .chalk-text-red {
+      color: var(--chalk-red);
+      text-shadow: 0px 0px 4px rgba(252, 165, 165, 0.5);
+    }
+
+    /* 手繪粉筆方框 */
+    .chalk-box {
+      border: 2px solid rgba(255,255,255,0.6);
+      /* 利用不規則圓角製造出手繪的隨性感 */
+      border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+      background: rgba(255,255,255,0.02);
+    }
+    .chalk-box:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.9);
+    }
+    .chalk-box-active {
+      border: 3px solid var(--chalk-yellow);
+      border-radius: 15px 255px 15px 225px / 225px 15px 255px 15px;
+      background: rgba(254, 240, 138, 0.05);
+    }
+
+    /* 底部木頭粉筆槽 */
+    .wooden-ledge {
+      background: linear-gradient(to bottom, #bd8349, #7a4f27);
+      border-top: 2px solid #e1b483;
+      box-shadow: 0 -5px 15px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    /* 裝飾用小粉筆 */
+    .chalk-piece {
+      position: absolute;
+      bottom: 6px;
+      width: 45px;
+      height: 12px;
+      border-radius: 3px;
+      box-shadow: inset -2px -2px 4px rgba(0,0,0,0.2), 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    /* 輸入框黑板風格 */
+    .chalk-input {
+      background: rgba(0,0,0,0.2);
+      border: none;
+      border-bottom: 2px dashed rgba(255,255,255,0.5);
+      color: var(--chalk-white);
+      font-family: 'Klee One', cursive;
+    }
+    .chalk-input:focus {
+      outline: none;
+      border-bottom-color: var(--chalk-yellow);
+      background: rgba(0,0,0,0.4);
+    }
+    /* 讓 time input 在深色背景下圖示正常顯示 */
+    ::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      opacity: 0.7;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="antialiased overflow-hidden selection:bg-[#fef08a] selection:text-black">
+
+  <!-- 主容器 -->
+  <div class="flex flex-col-reverse md:flex-row h-screen chalkboard-bg relative pb-6 md:pb-8">
+    
+    <!-- 左側：考試科目區塊 -->
+    <div class="w-full md:w-1/3 lg:w-1/4 flex flex-col border-r border-white/20 md:h-full relative z-10 p-4 md:p-6 pb-20 overflow-hidden">
+      
+      <!-- 左側標頭 -->
+      <div class="text-center mb-6 mt-2 flex flex-col items-center justify-center gap-2">
+        <h2 class="text-3xl font-bold tracking-[0.2em] chalk-text ml-2 flex items-center gap-3">
+          <i class="ph ph-chalkboard-teacher text-4xl"></i> 考試科目
+        </h2>
+        <div class="w-2/3 h-0.5 bg-white/30 rounded-full"></div>
+      </div>
+      
+      <!-- 時程清單容器 -->
+      <div id="schedule-container" class="flex-1 overflow-y-auto pr-2 space-y-5 pb-12">
+        <!-- 內容由 JavaScript 動態生成 -->
+      </div>
+    </div>
+
+    <!-- 右側：巨大時鐘區塊 -->
+    <div class="w-full md:w-2/3 lg:w-3/4 flex flex-col justify-center items-center relative h-[40vh] md:h-full">
+      
+      <!-- 設定按鈕 -->
+      <button 
+        onclick="openSettings()"
+        class="absolute top-4 right-4 md:top-8 md:right-8 p-3 text-white/70 hover:text-white transition-colors duration-300 z-10 flex items-center justify-center"
+        title="黑板設定"
+      >
+        <i class="ph ph-gear text-4xl chalk-text"></i>
+      </button>
+
+      <!-- 巨大時鐘字體 -->
+      <div 
+        id="clock-display"
+        class="font-bold tracking-[0.1em] tabular-nums text-center chalk-text"
+        style="font-size: clamp(5rem, 16vw, 18rem); line-height: 1;"
+      >
+        --:--:--
+      </div>
+    </div>
+    
+    <!-- 底部木頭粉筆槽裝飾 (固定於底部) -->
+    <div class="wooden-ledge fixed bottom-0 left-0 w-full h-4 md:h-6 z-20">
+      <!-- 隨機擺放幾根彩色粉筆 -->
+      <div class="chalk-piece bg-[#fca5a5] left-[10%] rotate-[-15deg]"></div>
+      <div class="chalk-piece bg-[#f8fafc] left-[15%] rotate-[5deg]"></div>
+      <div class="chalk-piece bg-[#86efac] left-[45%] md:left-[50%] rotate-[20deg]"></div>
+      <div class="chalk-piece bg-[#93c5fd] right-[30%] rotate-[-10deg]"></div>
+      <div class="chalk-piece bg-[#fef08a] right-[25%] rotate-[12deg]"></div>
+      <div class="chalk-piece bg-[#d8b4fe] right-[5%] rotate-[-5deg]"></div>
+    </div>
+
+  </div>
+
+  <!-- 設定對話視窗 (Modal) - 迷你黑板風格 -->
+  <div id="settings-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm justify-center items-center z-50 p-4 hidden transition-opacity duration-300">
+    <!-- 外層木框 -->
+    <div class="w-full max-w-2xl flex flex-col overflow-hidden max-h-[90vh] shadow-2xl animate-[fadeIn_0.2s_ease-out] rounded-xl border-[12px] border-[#8b5a2b] relative">
+      <!-- 內層黑板 -->
+      <div class="chalkboard-bg flex-1 flex flex-col h-full">
+        
+        <!-- Modal 標頭 -->
+        <div class="p-6 flex justify-between items-center shrink-0 border-b-2 border-white/20">
+          <h3 class="text-2xl font-bold flex items-center gap-3 tracking-widest chalk-text">
+            <i class="ph ph-pencil-line text-3xl"></i> 考程規劃
+          </h3>
+          <button 
+            onclick="closeSettings()"
+            class="p-2 text-white/60 hover:text-white transition-colors"
+          >
+            <i class="ph ph-x text-2xl"></i>
+          </button>
+        </div>
+
+        <!-- Modal 內容區 -->
+        <div class="p-8 overflow-y-auto flex-1">
+          
+          <!-- 新增/修改欄位 -->
+          <div class="p-6 chalk-box mb-8 flex flex-wrap gap-4 items-end">
+            <div class="flex-1 min-w-[120px]">
+              <label class="block text-sm font-bold text-white/80 mb-2 tracking-widest">科目名稱</label>
+              <input 
+                type="text" 
+                id="new-subject"
+                placeholder="例：國語文"
+                class="w-full p-2 chalk-input text-xl"
+              />
+            </div>
+            <div class="w-28 md:w-32">
+              <label class="block text-sm font-bold text-white/80 mb-2 tracking-widest">開始時間</label>
+              <input 
+                type="time" 
+                id="new-start"
+                class="w-full p-2 chalk-input text-xl"
+              />
+            </div>
+            <div class="w-28 md:w-32">
+              <label class="block text-sm font-bold text-white/80 mb-2 tracking-widest">結束時間</label>
+              <input 
+                type="time" 
+                id="new-end"
+                class="w-full p-2 chalk-input text-xl"
+              />
+            </div>
+            <button 
+              id="btn-submit-item"
+              onclick="addEditingItem()"
+              class="border-2 border-white/60 hover:border-white hover:bg-white/10 text-white p-2.5 flex items-center gap-2 font-bold transition-all w-full md:w-auto justify-center tracking-widest rounded-lg"
+            >
+              <i id="submit-icon" class="ph ph-plus text-xl"></i> <span id="submit-text">新增</span>
+            </button>
+          </div>
+
+          <!-- 目前清單 -->
+          <h4 class="text-sm font-bold text-white/80 tracking-[0.2em] mb-4 flex items-center gap-2 border-l-4 border-white/60 pl-3">
+            黑板上的排程
+          </h4>
+          <div id="editing-list" class="space-y-4">
+            <!-- 內容由 JavaScript 動態生成 -->
+          </div>
+        </div>
+
+        <!-- Modal 底部按鈕 -->
+        <div class="p-6 flex justify-end gap-4 shrink-0 border-t-2 border-white/20">
+          <button 
+            onclick="closeSettings()"
+            class="px-8 py-2.5 font-bold text-white/80 hover:text-white border border-transparent hover:border-white/40 rounded-lg transition-all tracking-widest"
+          >
+            取消
+          </button>
+          <button 
+            onclick="saveSettings()"
+            class="px-8 py-2.5 font-bold bg-white/10 border-2 border-white text-white hover:bg-white hover:text-black rounded-lg transition-all tracking-widest"
+          >
+            擦去舊字，保存設定
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- 應用程式狀態 ---
+    const defaultSchedule = [
+      { id: '1', subject: '國文', startTime: '08:10', endTime: '09:30' },
+      { id: '2', subject: '英文', startTime: '09:50', endTime: '11:10' },
+      { id: '3', subject: '數學', startTime: '11:30', endTime: '12:50' },
+    ];
+    
+    let schedule = [];
+    
+    // 從瀏覽器本地儲存讀取資料，若無則使用預設值
+    try {
+      const savedSchedule = localStorage.getItem('examSchedule');
+      schedule = savedSchedule ? JSON.parse(savedSchedule) : defaultSchedule;
+    } catch (e) {
+      console.error('無法讀取本地儲存的時程表', e);
+      schedule = defaultSchedule;
+    }
+    
+    let editingSchedule = [];
+    let activeExamId = null;
+    let currentEditId = null; 
+
+    // --- 工具函式 ---
+    const formatTime = (date) => {
+      const h = String(date.getHours()).padStart(2, '0');
+      const m = String(date.getMinutes()).padStart(2, '0');
+      const s = String(date.getSeconds()).padStart(2, '0');
+      return `${h}:${m}:${s}`;
+    };
+
+    const isCurrentExam = (start, end, timeObj) => {
+      const currentMinutes = timeObj.getHours() * 60 + timeObj.getMinutes();
+      const [startH, startM] = start.split(':').map(Number);
+      const [endH, endM] = end.split(':').map(Number);
+      const startTotal = startH * 60 + startM;
+      const endTotal = endH * 60 + endM;
+      return currentMinutes >= startTotal && currentMinutes <= endTotal;
+    };
+
+    // --- 畫面渲染函式 ---
+    
+    // 渲染左側考試清單
+    function renderSchedule() {
+      const container = document.getElementById('schedule-container');
+      
+      if (schedule.length === 0) {
+        container.innerHTML = `
+          <div class="text-center text-white/50 mt-16 flex flex-col items-center">
+            <i class="ph ph-wind text-5xl mb-4 opacity-50"></i>
+            <p class="tracking-widest chalk-text">黑板上空空如也</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = schedule.map(exam => {
+        const isActive = exam.id === activeExamId;
+        return `
+          <div class="p-5 transition-all duration-500 relative ${isActive ? 'chalk-box-active' : 'chalk-box'}">
+            <div class="flex flex-col ml-2 gap-1">
+              <div class="flex justify-between items-center">
+                <span class="text-3xl md:text-4xl font-bold tracking-widest leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">
+                  ${exam.subject}
+                </span>
+                ${isActive ? `<span class="text-[var(--chalk-yellow)] border border-[var(--chalk-yellow)] bg-yellow-400/10 text-xs font-bold px-3 py-1 tracking-[0.2em] rounded-full flex items-center gap-1 animate-pulse"><i class="ph-fill ph-circle text-[8px]"></i> 進行中</span>` : ''}
+              </div>
+              
+              <div class="flex items-center gap-5 font-medium ${isActive ? 'text-white' : 'text-white/70'}">
+                <i class="ph ${isActive ? 'ph-hourglass-high text-[var(--chalk-yellow)]' : 'ph-clock'} text-4xl opacity-90 mt-2"></i>
+                <div class="flex flex-col border-l-2 ${isActive ? 'border-[var(--chalk-yellow)]' : 'border-white/30'} pl-5 py-0.5 gap-2 mt-3">
+                  <span class="tracking-[0.1em] font-mono text-3xl md:text-4xl leading-none chalk-text">${exam.startTime}</span>
+                  <span class="tracking-[0.1em] font-mono text-3xl md:text-4xl leading-none chalk-text">${exam.endTime}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 渲染設定對話框內的編輯清單
+    function renderEditingSchedule() {
+      const listContainer = document.getElementById('editing-list');
+      
+      if (editingSchedule.length === 0) {
+        listContainer.innerHTML = `<p class="text-center text-white/50 py-6 tracking-widest">無項目</p>`;
+        return;
+      }
+
+      listContainer.innerHTML = editingSchedule.map(item => `
+        <div class="flex justify-between items-center p-4 chalk-box">
+          <div class="flex items-center gap-4 flex-wrap">
+            <span class="text-xl font-bold w-full md:w-24 chalk-text tracking-widest">${item.subject}</span>
+            <span class="text-white/80 px-3 py-1 font-mono text-lg tracking-widest flex items-center border-l-2 border-white/30">
+              ${item.startTime} - ${item.endTime}
+            </span>
+          </div>
+          <div class="flex items-center gap-1 shrink-0">
+            <button 
+              onclick="editEditingItem('${item.id}')"
+              class="text-white/50 hover:text-[var(--chalk-yellow)] p-2 transition-colors"
+              title="修改"
+            >
+              <i class="ph ph-pencil-simple text-2xl"></i>
+            </button>
+            <button 
+              onclick="removeEditingItem('${item.id}')"
+              class="text-white/50 hover:text-[var(--chalk-red)] p-2 transition-colors"
+              title="擦除"
+            >
+              <i class="ph ph-eraser text-2xl"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 更新時鐘與狀態
+    function updateClock() {
+      const now = new Date();
+      
+      // 更新大時鐘文字
+      document.getElementById('clock-display').textContent = formatTime(now);
+
+      // 檢查目前進行中的考試
+      let newActiveId = null;
+      for (const exam of schedule) {
+        if (isCurrentExam(exam.startTime, exam.endTime, now)) {
+          newActiveId = exam.id;
+          break;
+        }
+      }
+
+      if (newActiveId !== activeExamId) {
+        activeExamId = newActiveId;
+        renderSchedule();
+      }
+    }
+
+    // --- 互動邏輯 ---
+
+    function openSettings() {
+      editingSchedule = JSON.parse(JSON.stringify(schedule)); 
+      const modal = document.getElementById('settings-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      renderEditingSchedule();
+    }
+
+    function closeSettings() {
+      const modal = document.getElementById('settings-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      
+      resetInputFields();
+    }
+
+    // 重設輸入框與按鈕狀態
+    function resetInputFields() {
+      document.getElementById('new-subject').value = '';
+      document.getElementById('new-start').value = '';
+      document.getElementById('new-end').value = '';
+      
+      currentEditId = null;
+      document.getElementById('submit-text').textContent = '新增';
+      document.getElementById('submit-icon').className = 'ph ph-plus text-xl';
+    }
+
+    function saveSettings() {
+      schedule = [...editingSchedule];
+      activeExamId = null; 
+      
+      try {
+        localStorage.setItem('examSchedule', JSON.stringify(schedule));
+      } catch (e) {
+        console.error('無法儲存時程表至瀏覽器', e);
+      }
+      
+      renderSchedule(); 
+      updateClock(); 
+      closeSettings();
+    }
+
+    function addEditingItem() {
+      const subjectInput = document.getElementById('new-subject');
+      const startInput = document.getElementById('new-start');
+      const endInput = document.getElementById('new-end');
+
+      const subject = subjectInput.value.trim();
+      const startTime = startInput.value;
+      const endTime = endInput.value;
+
+      if (subject && startTime && endTime) {
+        if(startTime >= endTime) {
+          alert('結束時間必須晚於開始時間喔！');
+          return;
+        }
+
+        if (currentEditId) {
+          const index = editingSchedule.findIndex(item => item.id === currentEditId);
+          if (index !== -1) {
+            editingSchedule[index] = { ...editingSchedule[index], subject, startTime, endTime };
+          }
+        } else {
+          editingSchedule.push({
+            id: Date.now().toString(),
+            subject,
+            startTime,
+            endTime
+          });
+        }
+
+        editingSchedule.sort((a, b) => a.startTime.localeCompare(b.startTime));
+        renderEditingSchedule();
+        resetInputFields(); 
+      } else {
+        alert('請把黑板上的資訊填寫完整喔！');
+      }
+    }
+
+    function editEditingItem(id) {
+      const item = editingSchedule.find(i => i.id === id);
+      if (item) {
+        document.getElementById('new-subject').value = item.subject;
+        document.getElementById('new-start').value = item.startTime;
+        document.getElementById('new-end').value = item.endTime;
+        
+        currentEditId = id;
+        
+        document.getElementById('submit-text').textContent = '更新';
+        document.getElementById('submit-icon').className = 'ph ph-check text-xl';
+      }
+    }
+
+    function removeEditingItem(id) {
+      editingSchedule = editingSchedule.filter(item => item.id !== id);
+      if (currentEditId === id) resetInputFields();
+      renderEditingSchedule();
+    }
+
+    // --- 初始化 ---
+    function init() {
+      renderSchedule(); 
+      updateClock();    
+      setInterval(updateClock, 1000);
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+
+  </script>
+</body>
+</html>
