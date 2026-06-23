@@ -178,11 +178,10 @@
 
   <!-- 設定對話視窗 (Modal) -->
   <div id="settings-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm justify-center items-center z-50 p-4 hidden transition-opacity duration-300">
-    <div class="w-full max-w-4xl flex flex-col overflow-hidden max-h-[90vh] shadow-2xl animate-[fadeIn_0.2s_ease-out] rounded-xl border-[12px] border-[#8b5a2b] relative">
-      <div class="chalkboard-bg flex-1 flex flex-col h-full">
+    <div class="w-full max-w-4xl flex flex-col overflow-hidden max-h-[90vh] shadow-2xl animate-[fadeIn_0.2s_ease-out] rounded-xl border-[12px] border-[#8b5a2b] relative chalkboard-bg">
         
         <!-- Modal 標頭 -->
-        <div class="p-6 flex justify-between items-center shrink-0 border-b-2 border-white/20">
+        <div class="p-5 md:p-6 flex justify-between items-center shrink-0 border-b-2 border-white/20 bg-black/10">
           <h3 class="text-2xl font-bold flex items-center gap-3 tracking-widest chalk-text">
             <i class="ph ph-chalkboard-teacher text-3xl"></i> 系統管理與考程設定
           </h3>
@@ -192,7 +191,7 @@
         </div>
 
         <!-- Modal 內容區 -->
-        <div class="p-6 md:p-8 overflow-y-auto flex-1 flex flex-col md:flex-row gap-8">
+        <div class="p-6 md:p-8 overflow-y-auto flex-1 flex flex-col md:flex-row gap-8 min-h-0">
           
           <!-- 左欄：全局設定 -->
           <div class="w-full md:w-5/12 flex flex-col gap-6">
@@ -261,16 +260,15 @@
         </div>
 
         <!-- Modal 底部按鈕 -->
-        <div class="p-6 flex justify-end gap-4 shrink-0 border-t-2 border-white/20 bg-black/10">
-          <button onclick="closeSettings()" class="px-8 py-3 font-bold text-white/70 hover:text-white border border-transparent hover:border-white/30 rounded-lg transition-all tracking-widest text-lg">
+        <div class="p-5 flex justify-end gap-4 shrink-0 border-t-2 border-white/20 bg-black/20">
+          <button onclick="closeSettings()" class="px-6 py-3 font-bold text-white/70 hover:text-white border border-transparent hover:border-white/30 rounded-lg transition-all tracking-widest text-lg">
             取消
           </button>
-          <button onclick="saveSettings()" class="px-8 py-3 font-bold bg-white/10 border-2 border-[var(--chalk-yellow)] text-[var(--chalk-yellow)] hover:bg-[var(--chalk-yellow)] hover:text-black rounded-lg transition-all tracking-widest shadow-[0_0_10px_rgba(254,240,138,0.2)] text-lg">
-            擦去舊字，儲存所有設定
+          <button onclick="saveSettings()" class="px-6 md:px-8 py-3 font-bold bg-white/10 border-2 border-[var(--chalk-yellow)] text-[var(--chalk-yellow)] hover:bg-[var(--chalk-yellow)] hover:text-black rounded-lg transition-all tracking-widest shadow-[0_0_10px_rgba(254,240,138,0.2)] text-lg">
+            確定儲存
           </button>
         </div>
 
-      </div>
     </div>
   </div>
 
