@@ -128,10 +128,10 @@
   </button>
 
   <!-- 主滾動容器 -->
-  <div class="flex-1 overflow-y-auto w-full pb-24">
+  <div class="flex-1 overflow-y-auto w-full pb-12 flex flex-col justify-between">
     
     <!-- 上方：巨大時鐘與叮嚀區塊 -->
-    <div class="w-full flex flex-col justify-center items-center pt-8 md:pt-16 pb-8 shrink-0">
+    <div class="w-full flex flex-col justify-center items-center pt-6 md:pt-10 pb-2 shrink-0">
       <!-- 巨大時鐘字體 -->
       <div 
         id="clock-display"
@@ -142,14 +142,14 @@
       </div>
       
       <!-- 老師的小叮嚀 -->
-      <div id="notes-display" class="text-2xl md:text-4xl mt-6 md:mt-8 tracking-widest chalk-text-yellow min-h-[3rem] px-6 text-center max-w-4xl leading-relaxed">
+      <div id="notes-display" class="text-xl md:text-3xl mt-2 md:mt-4 tracking-widest chalk-text-yellow min-h-[3rem] px-6 text-center max-w-4xl leading-relaxed">
         <!-- 由 JavaScript 填入 -->
       </div>
     </div>
 
     <!-- 下方/中央：考試科目清單區塊 -->
-    <div class="w-full max-w-6xl mx-auto px-6 pt-4 pb-12 flex flex-col items-center">
-      <div id="schedule-container" class="flex flex-row flex-wrap justify-center gap-6 w-full">
+    <div class="w-full max-w-[1400px] mx-auto px-6 pt-2 pb-10 flex-1 flex flex-col justify-center items-center">
+      <div id="schedule-container" class="flex flex-row flex-wrap justify-center items-stretch gap-4 md:gap-6 w-full">
         <!-- 內容由 JavaScript 動態生成 -->
       </div>
     </div>
@@ -344,20 +344,20 @@
       container.innerHTML = appData.schedule.map(exam => {
         const isActive = exam.id === activeExamId;
         return `
-          <div class="p-6 md:p-8 transition-all duration-500 relative ${isActive ? 'chalk-box-active scale-105 shadow-[0_0_20px_rgba(254,240,138,0.15)] z-10' : 'chalk-box opacity-80 hover:opacity-100'} w-full md:w-80 flex-shrink-0">
-            <div class="flex flex-col gap-2">
-              <div class="flex justify-between items-start mb-2">
-                <span class="text-4xl md:text-5xl font-bold tracking-widest leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">
+          <div class="p-5 md:p-6 transition-all duration-500 relative ${isActive ? 'chalk-box-active scale-105 shadow-[0_0_20px_rgba(254,240,138,0.15)] z-10' : 'chalk-box opacity-80 hover:opacity-100'} flex-1 min-w-[260px] max-w-[360px] flex-shrink-0">
+            <div class="flex flex-col gap-2 h-full justify-center">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-3xl md:text-4xl font-bold tracking-widest leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">
                   ${exam.subject}
                 </span>
-                ${isActive ? `<span class="text-[var(--chalk-yellow)] border-2 border-[var(--chalk-yellow)] bg-yellow-400/10 text-sm font-bold px-3 py-1 tracking-[0.2em] rounded-full animate-pulse whitespace-nowrap">進行中</span>` : ''}
+                ${isActive ? `<span class="text-[var(--chalk-yellow)] border-2 border-[var(--chalk-yellow)] bg-yellow-400/10 text-xs font-bold px-3 py-1 tracking-[0.2em] rounded-full animate-pulse whitespace-nowrap">進行中</span>` : ''}
               </div>
               
-              <div class="flex items-center gap-5 mt-4">
-                <i class="ph ${isActive ? 'ph-hourglass-high text-[var(--chalk-yellow)] animate-pulse' : 'ph-clock text-white/50'} text-5xl"></i>
-                <div class="flex flex-col border-l-2 ${isActive ? 'border-[var(--chalk-yellow)]' : 'border-white/30'} pl-5 py-1 gap-3">
-                  <span class="tracking-[0.1em] font-mono text-3xl md:text-4xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.startTime}</span>
-                  <span class="tracking-[0.1em] font-mono text-3xl md:text-4xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.endTime}</span>
+              <div class="flex items-center gap-4 mt-3">
+                <i class="ph ${isActive ? 'ph-hourglass-high text-[var(--chalk-yellow)] animate-pulse' : 'ph-clock text-white/50'} text-4xl"></i>
+                <div class="flex flex-col border-l-2 ${isActive ? 'border-[var(--chalk-yellow)]' : 'border-white/30'} pl-4 py-1 gap-2">
+                  <span class="tracking-[0.1em] font-mono text-2xl md:text-3xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.startTime}</span>
+                  <span class="tracking-[0.1em] font-mono text-2xl md:text-3xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.endTime}</span>
                 </div>
               </div>
             </div>
