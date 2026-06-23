@@ -278,19 +278,19 @@
       container.innerHTML = appData.schedule.map(exam => {
         const isActive = exam.id === activeExamId;
         return `
-          <div class="p-4 md:p-5 transition-all duration-500 relative ${isActive ? 'chalk-box-active scale-105 shadow-[0_0_20px_rgba(254,240,138,0.15)] z-10' : 'chalk-box opacity-80 hover:opacity-100'} w-auto flex-shrink-0 group">
+          <div class="p-3 md:p-4 transition-all duration-500 relative ${isActive ? 'chalk-box-active scale-105 shadow-[0_0_20px_rgba(254,240,138,0.15)] z-10' : 'chalk-box opacity-80 hover:opacity-100'} w-fit min-w-0 flex-shrink-0 group">
             
             ${isActive ? `<span class="absolute -top-3 -left-3 text-[var(--chalk-yellow)] border border-[var(--chalk-yellow)] bg-[#26302c] text-xs font-bold px-2 py-1 md:px-3 md:py-1.5 tracking-[0.2em] rounded-full animate-pulse whitespace-nowrap shadow-lg z-30">進行中</span>` : ''}
 
             <div class="flex flex-col gap-1 md:gap-2 h-full justify-center pt-1">
               
-              <!-- 將科目名稱與編輯圖示放在同一行，並拉近距離 -->
-              <div class="flex items-center gap-3 mb-1">
+              <!-- 科目名稱與圖示緊貼，移除所有不必要的空白 -->
+              <div class="flex items-center gap-2 mb-1">
                 <span class="text-2xl md:text-4xl font-bold tracking-widest leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">
                   ${exam.subject}
                 </span>
                 
-                <div class="flex gap-1 z-20 opacity-60 hover:opacity-100 transition-opacity">
+                <div class="flex gap-1 z-20 opacity-70 hover:opacity-100 transition-opacity">
                   <button onclick="editFromMain('${exam.id}')" class="text-white/70 hover:text-[var(--chalk-yellow)] transition-colors bg-[#26302c]/50 rounded-full p-1.5" title="修改">
                     <i class="ph ph-pencil-simple text-xl md:text-2xl"></i>
                   </button>
@@ -301,9 +301,9 @@
               </div>
               
               <!-- 下方時間區塊 -->
-              <div class="flex items-center gap-3 md:gap-4 mt-2 md:mt-3 pr-2">
+              <div class="flex items-center gap-3 mt-1">
                 <i class="ph ${isActive ? 'ph-hourglass-high text-[var(--chalk-yellow)] animate-pulse' : 'ph-clock text-white/50'} text-3xl md:text-4xl"></i>
-                <div class="flex flex-col border-l-2 ${isActive ? 'border-[var(--chalk-yellow)]' : 'border-white/30'} pl-3 md:pl-4 py-1 gap-1 md:gap-2">
+                <div class="flex flex-col border-l-2 ${isActive ? 'border-[var(--chalk-yellow)]' : 'border-white/30'} pl-3 py-1 gap-1">
                   <span class="tracking-[0.1em] font-mono text-xl md:text-3xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.startTime}</span>
                   <span class="tracking-[0.1em] font-mono text-xl md:text-3xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.endTime}</span>
                 </div>
@@ -326,7 +326,8 @@
       listContainer.innerHTML = editingSchedule.map(item => `
         <div class="flex justify-between items-center p-2 md:p-3 chalk-box bg-white/5">
           <div class="flex items-center gap-2 md:gap-3 flex-wrap flex-1">
-            <span class="text-lg md:text-xl font-bold w-full md:w-20 chalk-text tracking-widest">${item.subject}</span>
+            <!-- 確保設定清單裡的文字也不會有過寬的空白 -->
+            <span class="text-lg md:text-xl font-bold chalk-text tracking-widest">${item.subject}</span>
             <span class="text-white/80 px-2 md:px-3 py-1 font-mono text-sm md:text-lg tracking-widest border-l-2 border-white/30">
               ${item.startTime} - ${item.endTime}
             </span>
