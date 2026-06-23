@@ -65,7 +65,6 @@
     /* 手繪粉筆方框 */
     .chalk-box {
       border: 2px solid rgba(255,255,255,0.6);
-      /* 利用不規則圓角製造出手繪的隨性感 */
       border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
       background: rgba(255,255,255,0.02);
     }
@@ -86,7 +85,6 @@
       box-shadow: 0 -5px 15px rgba(0,0,0,0.5);
       position: relative;
     }
-    /* 裝飾用小粉筆 */
     .chalk-piece {
       position: absolute;
       bottom: 6px;
@@ -96,7 +94,6 @@
       box-shadow: inset -2px -2px 4px rgba(0,0,0,0.2), 2px 2px 4px rgba(0,0,0,0.3);
     }
     
-    /* 輸入框黑板風格 */
     .chalk-input {
       background: rgba(0,0,0,0.2);
       border: none;
@@ -121,18 +118,17 @@
   <!-- 頂部設定按鈕 -->
   <button 
     onclick="openSettings()"
-    class="absolute top-6 right-6 md:top-8 md:right-8 p-3 text-white/50 hover:text-white transition-colors duration-300 z-20 flex items-center justify-center rounded-full hover:bg-white/10"
+    class="absolute top-6 right-6 md:top-8 md:right-8 p-3 text-white/60 hover:text-white transition-colors duration-300 z-20 flex items-center justify-center rounded-full hover:bg-white/10"
     title="系統管理"
   >
     <i class="ph ph-gear-six text-4xl chalk-text"></i>
   </button>
 
   <!-- 主滾動容器 -->
-  <div class="flex-1 overflow-y-auto w-full flex flex-col justify-between">
+  <div class="flex-1 overflow-y-auto w-full flex flex-col">
     
     <!-- 上方：巨大時鐘與叮嚀區塊 -->
-    <div class="w-full flex flex-col justify-center items-center pt-6 md:pt-10 pb-2 shrink-0">
-      <!-- 巨大時鐘字體 -->
+    <div class="w-full flex flex-col justify-center items-center pt-8 md:pt-12 pb-4 shrink-0">
       <div 
         id="clock-display"
         class="font-bold tracking-[0.1em] tabular-nums text-center chalk-text"
@@ -140,28 +136,29 @@
       >
         --:--:--
       </div>
-      
-      <!-- 老師的小叮嚀 -->
-      <div id="notes-display" class="text-xl md:text-3xl mt-2 md:mt-4 tracking-widest chalk-text-yellow min-h-[3rem] px-6 text-center max-w-4xl leading-relaxed">
+      <div id="notes-display" class="text-xl md:text-3xl mt-4 tracking-widest chalk-text-yellow min-h-[3rem] px-6 text-center max-w-4xl leading-relaxed">
         <!-- 由 JavaScript 填入 -->
       </div>
     </div>
 
-    <!-- 下方/中央：考試科目清單區塊 (增加底部留白避免被計時器遮擋) -->
-    <div class="w-full max-w-[1400px] mx-auto px-6 pt-2 pb-40 md:pb-52 flex-1 flex flex-col justify-center items-center">
-      <div id="schedule-container" class="flex flex-row flex-wrap justify-center items-stretch gap-4 md:gap-6 w-full">
+    <!-- 下方/中央：考試科目清單區塊 -->
+    <div class="w-full max-w-[1400px] mx-auto px-6 pt-4 flex-1 flex flex-col items-center">
+      <div id="schedule-container" class="flex flex-row flex-wrap justify-center items-stretch gap-6 w-full">
         <!-- 內容由 JavaScript 動態生成 -->
       </div>
+      
+      <!-- 重要的防遮擋留白空間 (確保滑到底部不會被倒數計時器擋住) -->
+      <div class="w-full h-48 md:h-64 flex-shrink-0"></div>
     </div>
 
   </div>
 
   <!-- 右下方：倒數計時器 (浮動) -->
-  <div id="countdown-container" class="fixed bottom-16 md:bottom-20 right-6 md:right-10 z-30 hidden transition-all duration-500 chalk-box p-5 bg-[#26302c]/80 backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.5)] transform translate-y-0">
+  <div id="countdown-container" class="fixed bottom-16 md:bottom-20 right-6 md:right-10 z-30 hidden transition-all duration-500 chalk-box p-6 bg-[#26302c]/90 backdrop-blur-md shadow-[0_12px_40px_rgba(0,0,0,0.6)] transform translate-y-0">
     <div class="text-[var(--chalk-red)] text-sm md:text-lg font-bold tracking-[0.2em] mb-2 flex items-center gap-2">
       <i class="ph-fill ph-timer animate-pulse"></i> 本節剩餘時間
     </div>
-    <div id="countdown-display" class="text-5xl md:text-7xl font-mono chalk-text-red tabular-nums text-center font-bold tracking-widest">
+    <div id="countdown-display" class="text-6xl md:text-8xl font-mono chalk-text-red tabular-nums text-center font-bold tracking-widest leading-none">
       --:--
     </div>
   </div>
@@ -177,11 +174,11 @@
   </div>
 
   <!-- 設定對話視窗 (Modal) -->
-  <div id="settings-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm justify-center items-center z-50 p-4 hidden transition-opacity duration-300">
+  <div id="settings-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm justify-center items-center z-50 p-4 hidden transition-opacity duration-300">
     <div class="w-full max-w-4xl flex flex-col overflow-hidden max-h-[90vh] shadow-2xl animate-[fadeIn_0.2s_ease-out] rounded-xl border-[12px] border-[#8b5a2b] relative chalkboard-bg">
         
         <!-- Modal 標頭 -->
-        <div class="p-5 md:p-6 flex justify-between items-center shrink-0 border-b-2 border-white/20 bg-black/10">
+        <div class="p-5 md:p-6 flex justify-between items-center shrink-0 border-b-2 border-white/20 bg-black/20">
           <h3 class="text-2xl font-bold flex items-center gap-3 tracking-widest chalk-text">
             <i class="ph ph-chalkboard-teacher text-3xl"></i> 系統管理與考程設定
           </h3>
@@ -260,7 +257,7 @@
         </div>
 
         <!-- Modal 底部按鈕 -->
-        <div class="p-5 flex justify-end gap-4 shrink-0 border-t-2 border-white/20 bg-black/20">
+        <div class="p-5 flex justify-end gap-4 shrink-0 border-t-2 border-white/20 bg-black/30">
           <button onclick="closeSettings()" class="px-6 py-3 font-bold text-white/70 hover:text-white border border-transparent hover:border-white/30 rounded-lg transition-all tracking-widest text-lg">
             取消
           </button>
@@ -288,15 +285,10 @@
     
     let appData = JSON.parse(JSON.stringify(defaultData));
     
-    // 從瀏覽器本地儲存讀取資料
     try {
       const savedData = localStorage.getItem('boardAppData');
       if (savedData) {
         appData = JSON.parse(savedData);
-      } else {
-        // 為了相容舊版的儲存資料 (只存了 schedule)
-        const oldSchedule = localStorage.getItem('examSchedule');
-        if (oldSchedule) appData.schedule = JSON.parse(oldSchedule);
       }
     } catch (e) {
       console.error('無法讀取本地儲存資料', e);
@@ -306,7 +298,6 @@
     let activeExamId = null;
     let currentEditId = null; 
 
-    // --- 工具函式 ---
     const formatTime = (date) => {
       const h = String(date.getHours()).padStart(2, '0');
       const m = String(date.getMinutes()).padStart(2, '0');
@@ -325,7 +316,6 @@
 
     // --- 畫面渲染函式 ---
     
-    // 渲染中央考試清單 (置中卡片式)
     function renderSchedule() {
       const container = document.getElementById('schedule-container');
       
@@ -342,31 +332,31 @@
       container.innerHTML = appData.schedule.map(exam => {
         const isActive = exam.id === activeExamId;
         return `
-          <div class="p-5 md:p-6 transition-all duration-500 relative group ${isActive ? 'chalk-box-active scale-105 shadow-[0_0_20px_rgba(254,240,138,0.15)] z-10' : 'chalk-box opacity-80 hover:opacity-100'} flex-1 min-w-[260px] max-w-[360px] flex-shrink-0">
+          <div class="p-6 md:p-8 transition-all duration-500 relative ${isActive ? 'chalk-box-active scale-105 shadow-[0_0_20px_rgba(254,240,138,0.15)] z-10' : 'chalk-box opacity-80 hover:opacity-100'} flex-1 min-w-[280px] max-w-[380px] flex-shrink-0 group">
             
-            <!-- 主畫面編輯與刪除按鈕 -->
-            <div class="absolute top-3 right-3 flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity z-20">
-              <button onclick="editFromMain('${exam.id}')" class="text-white/40 hover:text-[var(--chalk-yellow)] transition-colors p-1" title="修改">
-                <i class="ph ph-pencil-simple text-xl md:text-2xl"></i>
+            <!-- 絕對定位：修改與刪除快捷鍵 (隨時顯示) -->
+            <div class="absolute top-4 right-4 flex gap-3 z-20">
+              <button onclick="editFromMain('${exam.id}')" class="text-white/60 hover:text-[var(--chalk-yellow)] transition-colors bg-[#26302c]/50 rounded-full p-1.5" title="修改">
+                <i class="ph ph-pencil-simple text-2xl md:text-3xl"></i>
               </button>
-              <button onclick="deleteFromMain('${exam.id}')" class="text-white/40 hover:text-[var(--chalk-red)] transition-colors p-1" title="擦除">
-                <i class="ph ph-eraser text-xl md:text-2xl"></i>
+              <button onclick="deleteFromMain('${exam.id}')" class="text-white/60 hover:text-[var(--chalk-red)] transition-colors bg-[#26302c]/50 rounded-full p-1.5" title="擦除">
+                <i class="ph ph-eraser text-2xl md:text-3xl"></i>
               </button>
             </div>
 
-            <div class="flex flex-col gap-2 h-full justify-center">
-              <div class="flex justify-between items-center mb-1 mt-2">
-                <span class="text-3xl md:text-4xl font-bold tracking-widest leading-none pr-12 ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">
+            <div class="flex flex-col gap-2 h-full justify-center pt-2">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-4xl md:text-5xl font-bold tracking-widest leading-none pr-20 ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">
                   ${exam.subject}
                 </span>
-                ${isActive ? `<span class="absolute -top-3 -left-3 text-[var(--chalk-yellow)] border-2 border-[var(--chalk-yellow)] bg-[#26302c] text-xs font-bold px-3 py-1 tracking-[0.2em] rounded-full animate-pulse whitespace-nowrap shadow-md">進行中</span>` : ''}
+                ${isActive ? `<span class="absolute -top-4 -left-4 text-[var(--chalk-yellow)] border-2 border-[var(--chalk-yellow)] bg-[#26302c] text-sm font-bold px-4 py-1.5 tracking-[0.2em] rounded-full animate-pulse whitespace-nowrap shadow-lg">進行中</span>` : ''}
               </div>
               
-              <div class="flex items-center gap-4 mt-3">
-                <i class="ph ${isActive ? 'ph-hourglass-high text-[var(--chalk-yellow)] animate-pulse' : 'ph-clock text-white/50'} text-4xl"></i>
-                <div class="flex flex-col border-l-2 ${isActive ? 'border-[var(--chalk-yellow)]' : 'border-white/30'} pl-4 py-1 gap-2">
-                  <span class="tracking-[0.1em] font-mono text-2xl md:text-3xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.startTime}</span>
-                  <span class="tracking-[0.1em] font-mono text-2xl md:text-3xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.endTime}</span>
+              <div class="flex items-center gap-5 mt-6">
+                <i class="ph ${isActive ? 'ph-hourglass-high text-[var(--chalk-yellow)] animate-pulse' : 'ph-clock text-white/50'} text-5xl"></i>
+                <div class="flex flex-col border-l-2 ${isActive ? 'border-[var(--chalk-yellow)]' : 'border-white/30'} pl-5 py-1 gap-3">
+                  <span class="tracking-[0.1em] font-mono text-3xl md:text-4xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.startTime}</span>
+                  <span class="tracking-[0.1em] font-mono text-3xl md:text-4xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.endTime}</span>
                 </div>
               </div>
             </div>
@@ -375,7 +365,6 @@
       }).join('');
     }
 
-    // 渲染設定對話框內的編輯清單
     function renderEditingSchedule() {
       const listContainer = document.getElementById('editing-list');
       
@@ -404,20 +393,14 @@
       `).join('');
     }
 
-    // 渲染老師的小叮嚀
     function renderNotes() {
-      const notesContainer = document.getElementById('notes-display');
-      notesContainer.textContent = appData.settings.teacherNotes;
+      document.getElementById('notes-display').textContent = appData.settings.teacherNotes;
     }
 
-    // 更新時鐘、狀態與倒數計時
     function updateClock() {
       const now = new Date();
-      
-      // 更新大時鐘文字
       document.getElementById('clock-display').textContent = formatTime(now);
 
-      // 檢查目前進行中的考試
       let newActiveExam = null;
       for (const exam of appData.schedule) {
         if (isCurrentExam(exam.startTime, exam.endTime, now)) {
@@ -426,44 +409,38 @@
         }
       }
 
-      // 狀態改變時重繪卡片
       if ((newActiveExam ? newActiveExam.id : null) !== activeExamId) {
         activeExamId = newActiveExam ? newActiveExam.id : null;
         renderSchedule();
       }
 
-      // 處理倒數計時顯示
       const countdownContainer = document.getElementById('countdown-container');
       if (appData.settings.showCountdown && newActiveExam) {
         countdownContainer.classList.remove('translate-y-[150%]', 'opacity-0', 'hidden');
         countdownContainer.classList.add('translate-y-0', 'opacity-100');
         
-        // 計算剩餘時間
         const [endH, endM] = newActiveExam.endTime.split(':').map(Number);
         const endDate = new Date();
         endDate.setHours(endH, endM, 0, 0);
         
         let diffSeconds = Math.floor((endDate - now) / 1000);
-        if (diffSeconds < 0) diffSeconds = 0; // 避免負數
+        if (diffSeconds < 0) diffSeconds = 0; 
         
         const m = String(Math.floor(diffSeconds / 60)).padStart(2, '0');
         const s = String(diffSeconds % 60).padStart(2, '0');
-        
         document.getElementById('countdown-display').textContent = `${m}:${s}`;
       } else {
-        // 隱藏倒數計時器
         countdownContainer.classList.remove('translate-y-0', 'opacity-100');
         countdownContainer.classList.add('translate-y-[150%]', 'opacity-0');
         setTimeout(() => {
           if (!appData.settings.showCountdown || !newActiveExam) countdownContainer.classList.add('hidden');
-        }, 500); // 等待轉場動畫結束
+        }, 500); 
       }
     }
 
     // --- 互動邏輯 ---
 
     function openSettings() {
-      // 載入當前設定到對話窗
       editingSchedule = JSON.parse(JSON.stringify(appData.schedule)); 
       document.getElementById('setting-countdown').checked = appData.settings.showCountdown;
       document.getElementById('setting-notes').value = appData.settings.teacherNotes;
@@ -481,20 +458,20 @@
       resetInputFields();
     }
 
-    // 主畫面直接修改
+    // ★ 主畫面直接修改
     function editFromMain(id) {
       openSettings();
       editEditingItem(id);
     }
 
-    // 主畫面直接刪除
+    // ★ 主畫面直接刪除
     function deleteFromMain(id) {
       if (confirm('確定要從黑板上擦去這個科目嗎？')) {
         appData.schedule = appData.schedule.filter(item => item.id !== id);
         try {
           localStorage.setItem('boardAppData', JSON.stringify(appData));
         } catch (e) {}
-        activeExamId = null; // 強制下次重繪
+        activeExamId = null; 
         renderSchedule();
         updateClock();
       }
@@ -509,24 +486,18 @@
       const btn = document.getElementById('btn-submit-item');
       document.getElementById('submit-text').textContent = '新增';
       document.getElementById('submit-icon').className = 'ph ph-plus text-xl';
-      
-      // 恢復新增按鈕樣式
       btn.className = "border-2 border-[var(--chalk-green)] text-[var(--chalk-green)] hover:bg-[var(--chalk-green)] hover:text-black p-2 flex items-center gap-1 font-bold transition-all w-full md:w-auto justify-center tracking-widest rounded shadow-sm";
     }
 
     function saveSettings() {
-      // 收集設定
       appData.schedule = [...editingSchedule];
       appData.settings.showCountdown = document.getElementById('setting-countdown').checked;
       appData.settings.teacherNotes = document.getElementById('setting-notes').value.trim();
-      activeExamId = null; // 強制下次重繪
+      activeExamId = null; 
       
-      // 儲存至本地端
       try {
         localStorage.setItem('boardAppData', JSON.stringify(appData));
-      } catch (e) {
-        console.error('無法儲存設定至瀏覽器', e);
-      }
+      } catch (e) {}
       
       renderNotes();
       renderSchedule(); 
@@ -577,14 +548,11 @@
         document.getElementById('new-subject').value = item.subject;
         document.getElementById('new-start').value = item.startTime;
         document.getElementById('new-end').value = item.endTime;
-        
         currentEditId = id;
         
         const btn = document.getElementById('btn-submit-item');
         document.getElementById('submit-text').textContent = '更新';
         document.getElementById('submit-icon').className = 'ph ph-check text-xl';
-        
-        // 變更為修改模式樣式
         btn.className = "border-2 border-[var(--chalk-yellow)] text-[var(--chalk-yellow)] hover:bg-[var(--chalk-yellow)] hover:text-black p-2 flex items-center gap-1 font-bold transition-all w-full md:w-auto justify-center tracking-widest rounded shadow-sm";
       }
     }
