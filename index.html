@@ -128,7 +128,7 @@
   </button>
 
   <!-- 主滾動容器 -->
-  <div class="flex-1 overflow-y-auto w-full pb-12 flex flex-col justify-between">
+  <div class="flex-1 overflow-y-auto w-full flex flex-col justify-between">
     
     <!-- 上方：巨大時鐘與叮嚀區塊 -->
     <div class="w-full flex flex-col justify-center items-center pt-6 md:pt-10 pb-2 shrink-0">
@@ -147,8 +147,8 @@
       </div>
     </div>
 
-    <!-- 下方/中央：考試科目清單區塊 -->
-    <div class="w-full max-w-[1400px] mx-auto px-6 pt-2 pb-10 flex-1 flex flex-col justify-center items-center">
+    <!-- 下方/中央：考試科目清單區塊 (增加底部留白避免被計時器遮擋) -->
+    <div class="w-full max-w-[1400px] mx-auto px-6 pt-2 pb-40 md:pb-52 flex-1 flex flex-col justify-center items-center">
       <div id="schedule-container" class="flex flex-row flex-wrap justify-center items-stretch gap-4 md:gap-6 w-full">
         <!-- 內容由 JavaScript 動態生成 -->
       </div>
@@ -342,13 +342,24 @@
       container.innerHTML = appData.schedule.map(exam => {
         const isActive = exam.id === activeExamId;
         return `
-          <div class="p-5 md:p-6 transition-all duration-500 relative ${isActive ? 'chalk-box-active scale-105 shadow-[0_0_20px_rgba(254,240,138,0.15)] z-10' : 'chalk-box opacity-80 hover:opacity-100'} flex-1 min-w-[260px] max-w-[360px] flex-shrink-0">
+          <div class="p-5 md:p-6 transition-all duration-500 relative group ${isActive ? 'chalk-box-active scale-105 shadow-[0_0_20px_rgba(254,240,138,0.15)] z-10' : 'chalk-box opacity-80 hover:opacity-100'} flex-1 min-w-[260px] max-w-[360px] flex-shrink-0">
+            
+            <!-- 主畫面編輯與刪除按鈕 -->
+            <div class="absolute top-3 right-3 flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity z-20">
+              <button onclick="editFromMain('${exam.id}')" class="text-white/40 hover:text-[var(--chalk-yellow)] transition-colors p-1" title="修改">
+                <i class="ph ph-pencil-simple text-xl md:text-2xl"></i>
+              </button>
+              <button onclick="deleteFromMain('${exam.id}')" class="text-white/40 hover:text-[var(--chalk-red)] transition-colors p-1" title="擦除">
+                <i class="ph ph-eraser text-xl md:text-2xl"></i>
+              </button>
+            </div>
+
             <div class="flex flex-col gap-2 h-full justify-center">
-              <div class="flex justify-between items-center mb-1">
-                <span class="text-3xl md:text-4xl font-bold tracking-widest leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">
+              <div class="flex justify-between items-center mb-1 mt-2">
+                <span class="text-3xl md:text-4xl font-bold tracking-widest leading-none pr-12 ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">
                   ${exam.subject}
                 </span>
-                ${isActive ? `<span class="text-[var(--chalk-yellow)] border-2 border-[var(--chalk-yellow)] bg-yellow-400/10 text-xs font-bold px-3 py-1 tracking-[0.2em] rounded-full animate-pulse whitespace-nowrap">進行中</span>` : ''}
+                ${isActive ? `<span class="absolute -top-3 -left-3 text-[var(--chalk-yellow)] border-2 border-[var(--chalk-yellow)] bg-[#26302c] text-xs font-bold px-3 py-1 tracking-[0.2em] rounded-full animate-pulse whitespace-nowrap shadow-md">進行中</span>` : ''}
               </div>
               
               <div class="flex items-center gap-4 mt-3">
@@ -468,6 +479,25 @@
       modal.classList.add('hidden');
       modal.classList.remove('flex');
       resetInputFields();
+    }
+
+    // 主畫面直接修改
+    function editFromMain(id) {
+      openSettings();
+      editEditingItem(id);
+    }
+
+    // 主畫面直接刪除
+    function deleteFromMain(id) {
+      if (confirm('確定要從黑板上擦去這個科目嗎？')) {
+        appData.schedule = appData.schedule.filter(item => item.id !== id);
+        try {
+          localStorage.setItem('boardAppData', JSON.stringify(appData));
+        } catch (e) {}
+        activeExamId = null; // 強制下次重繪
+        renderSchedule();
+        updateClock();
+      }
     }
 
     function resetInputFields() {
