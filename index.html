@@ -101,36 +101,43 @@
 </head>
 <body class="antialiased overflow-hidden selection:bg-[#fef08a] selection:text-black chalkboard-bg h-screen flex flex-col relative">
 
-  <button onclick="openSettings()" class="absolute top-6 right-6 md:top-8 md:right-8 p-3 text-white/60 hover:text-white transition-colors duration-300 z-20 flex items-center justify-center rounded-full hover:bg-white/10" title="系統管理">
-    <i class="ph ph-gear-six text-4xl chalk-text"></i>
+  <!-- 頂部設定按鈕 -->
+  <button onclick="openSettings()" class="absolute top-4 right-4 md:top-6 md:right-6 p-2 md:p-3 text-white/60 hover:text-white transition-colors duration-300 z-20 flex items-center justify-center rounded-full hover:bg-white/10" title="系統管理">
+    <i class="ph ph-gear-six text-3xl md:text-4xl chalk-text"></i>
   </button>
 
-  <div class="flex-1 overflow-y-auto w-full flex flex-col">
-    <div class="w-full flex flex-col justify-center items-center pt-8 md:pt-12 pb-4 shrink-0">
-      <div id="clock-display" class="font-bold tracking-[0.1em] tabular-nums text-center chalk-text" style="font-size: clamp(5rem, 15vw, 15rem); line-height: 1;">
+  <!-- 主容器 (移除滾動，改為高度滿版且內容置中) -->
+  <div class="flex-1 w-full flex flex-col min-h-0 overflow-hidden">
+    
+    <!-- 上方：巨大時鐘與叮嚀區塊 (高度自適應) -->
+    <div class="w-full flex flex-col justify-center items-center pt-4 md:pt-8 pb-2 shrink-0 z-10">
+      <div id="clock-display" class="font-bold tracking-[0.1em] tabular-nums text-center chalk-text" style="font-size: clamp(4rem, 14vh, 15rem); line-height: 1;">
         --:--:--
       </div>
-      <div id="notes-display" class="text-xl md:text-3xl mt-4 tracking-widest chalk-text-yellow min-h-[3rem] px-6 text-center max-w-4xl leading-relaxed">
+      <div id="notes-display" class="text-lg md:text-2xl mt-2 md:mt-4 tracking-widest chalk-text-yellow px-6 text-center max-w-4xl leading-relaxed">
       </div>
     </div>
 
-    <div class="w-full max-w-[1400px] mx-auto px-6 pt-4 flex-1 flex flex-col items-center">
-      <div id="schedule-container" class="flex flex-row flex-wrap justify-center items-stretch gap-6 w-full">
+    <!-- 下方/中央：考試科目清單區塊 (動態填滿剩餘高度並置中卡片) -->
+    <div class="w-full max-w-[1600px] mx-auto px-4 md:px-8 pb-12 md:pb-16 pt-2 flex-1 flex flex-col justify-center items-center min-h-0">
+      <div id="schedule-container" class="flex flex-row flex-wrap justify-center items-center content-center gap-3 md:gap-5 w-full h-full overflow-hidden">
+        <!-- 內容由 JavaScript 動態生成 -->
       </div>
-      <div class="w-full h-48 md:h-64 flex-shrink-0"></div>
     </div>
   </div>
 
-  <div id="countdown-container" class="fixed bottom-16 md:bottom-20 right-6 md:right-10 z-30 hidden transition-all duration-500 chalk-box p-6 bg-[#26302c]/90 backdrop-blur-md shadow-[0_12px_40px_rgba(0,0,0,0.6)] transform translate-y-0">
-    <div class="text-[var(--chalk-red)] text-sm md:text-lg font-bold tracking-[0.2em] mb-2 flex items-center gap-2">
+  <!-- 右下方：倒數計時器 (浮動) -->
+  <div id="countdown-container" class="fixed bottom-10 md:bottom-12 right-4 md:right-8 z-30 hidden transition-all duration-500 chalk-box p-4 md:p-5 bg-[#26302c]/95 backdrop-blur-md shadow-[0_12px_40px_rgba(0,0,0,0.6)] transform translate-y-0">
+    <div class="text-[var(--chalk-red)] text-xs md:text-sm font-bold tracking-[0.2em] mb-1 md:mb-2 flex items-center gap-2">
       <i class="ph-fill ph-timer animate-pulse"></i> 本節剩餘時間
     </div>
-    <div id="countdown-display" class="text-6xl md:text-8xl font-mono chalk-text-red tabular-nums text-center font-bold tracking-widest leading-none">
+    <div id="countdown-display" class="text-5xl md:text-7xl font-mono chalk-text-red tabular-nums text-center font-bold tracking-widest leading-none">
       --:--
     </div>
   </div>
   
-  <div class="wooden-ledge fixed bottom-0 left-0 w-full h-5 md:h-8 z-40">
+  <!-- 底部木頭粉筆槽裝飾 (固定於底部) -->
+  <div class="wooden-ledge fixed bottom-0 left-0 w-full h-4 md:h-6 z-40">
     <div class="chalk-piece bg-[#fca5a5] left-[10%] rotate-[-15deg]"></div>
     <div class="chalk-piece bg-[#f8fafc] left-[15%] rotate-[5deg]"></div>
     <div class="chalk-piece bg-[#86efac] left-[45%] md:left-[50%] rotate-[20deg]"></div>
@@ -139,11 +146,12 @@
     <div class="chalk-piece bg-[#d8b4fe] right-[5%] rotate-[-5deg]"></div>
   </div>
 
+  <!-- 設定對話視窗 (Modal) -->
   <div id="settings-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm justify-center items-center z-50 p-4 hidden transition-opacity duration-300">
     <div class="w-full max-w-4xl flex flex-col overflow-hidden max-h-[90vh] shadow-2xl animate-[fadeIn_0.2s_ease-out] rounded-xl border-[12px] border-[#8b5a2b] relative chalkboard-bg">
         
-        <div class="p-5 md:p-6 flex justify-between items-center shrink-0 border-b-2 border-white/20 bg-black/20">
-          <h3 class="text-2xl font-bold flex items-center gap-3 tracking-widest chalk-text">
+        <div class="p-4 md:p-6 flex justify-between items-center shrink-0 border-b-2 border-white/20 bg-black/20">
+          <h3 class="text-xl md:text-2xl font-bold flex items-center gap-3 tracking-widest chalk-text">
             <i class="ph ph-chalkboard-teacher text-3xl"></i> 系統管理與考程設定
           </h3>
           <button onclick="closeSettings()" class="p-2 text-white/60 hover:text-white transition-colors">
@@ -151,26 +159,26 @@
           </button>
         </div>
 
-        <div class="p-6 md:p-8 overflow-y-auto flex-1 flex flex-col md:flex-row gap-8 min-h-0">
+        <div class="p-4 md:p-8 overflow-y-auto flex-1 flex flex-col md:flex-row gap-6 md:gap-8 min-h-0">
           
           <!-- 左欄：全局設定 -->
           <div class="w-full md:w-5/12 flex flex-col gap-6">
-            <div class="chalk-box p-6 flex-1">
-              <h4 class="text-lg font-bold text-[var(--chalk-yellow)] tracking-[0.2em] mb-6 flex items-center gap-2 border-b-2 border-white/20 pb-3">
+            <div class="chalk-box p-5 md:p-6 flex-1">
+              <h4 class="text-base md:text-lg font-bold text-[var(--chalk-yellow)] tracking-[0.2em] mb-4 md:mb-6 flex items-center gap-2 border-b-2 border-white/20 pb-3">
                 <i class="ph ph-sliders-horizontal"></i> 畫面顯示設定
               </h4>
               
-              <div class="space-y-6">
-                <label class="flex items-center gap-4 cursor-pointer group">
-                  <input type="checkbox" id="setting-countdown" onchange="autoSaveGlobalSettings()" class="w-6 h-6 rounded bg-black/20 border-white/50 text-[var(--chalk-yellow)] focus:ring-[var(--chalk-yellow)] cursor-pointer">
-                  <span class="text-xl chalk-text tracking-widest group-hover:text-[var(--chalk-yellow)] transition-colors">啟用右下方倒數計時</span>
+              <div class="space-y-4 md:space-y-6">
+                <label class="flex items-center gap-3 cursor-pointer group">
+                  <input type="checkbox" id="setting-countdown" onchange="autoSaveGlobalSettings()" class="w-5 h-5 rounded bg-black/20 border-white/50 text-[var(--chalk-yellow)] focus:ring-[var(--chalk-yellow)] cursor-pointer">
+                  <span class="text-lg md:text-xl chalk-text tracking-widest group-hover:text-[var(--chalk-yellow)] transition-colors">啟用右下方倒數計時</span>
                 </label>
 
                 <div class="pt-2">
-                  <label class="block text-xl font-bold text-white/90 mb-3 tracking-widest chalk-text flex items-center gap-2">
+                  <label class="block text-lg md:text-xl font-bold text-white/90 mb-2 md:mb-3 tracking-widest chalk-text flex items-center gap-2">
                     <i class="ph ph-chat-text"></i> 老師的小叮嚀
                   </label>
-                  <textarea id="setting-notes" rows="3" onchange="autoSaveGlobalSettings()" placeholder="例如：請保持安靜，仔細檢查試卷！" class="w-full p-4 chalk-input text-xl resize-none rounded bg-black/20"></textarea>
+                  <textarea id="setting-notes" rows="3" onchange="autoSaveGlobalSettings()" placeholder="例如：請保持安靜，仔細檢查試卷！" class="w-full p-3 md:p-4 chalk-input text-lg md:text-xl resize-none rounded bg-black/20"></textarea>
                 </div>
               </div>
             </div>
@@ -178,38 +186,35 @@
 
           <!-- 右欄：考程編輯 -->
           <div class="w-full md:w-7/12 flex flex-col">
-            <h4 class="text-lg font-bold text-white/80 tracking-[0.2em] mb-4 flex items-center gap-2 border-l-4 border-white/60 pl-3">
+            <h4 class="text-base md:text-lg font-bold text-white/80 tracking-[0.2em] mb-3 md:mb-4 flex items-center gap-2 border-l-4 border-white/60 pl-3">
               黑板上的考程
             </h4>
             
-            <!-- 【已優化】防呆排版的新增欄位 (採用 Grid，防止按鈕掉出或無法點擊) -->
-            <div class="p-5 chalk-box mb-6 grid grid-cols-2 md:flex md:flex-wrap gap-4 items-end bg-white/5">
+            <div class="p-4 md:p-5 chalk-box mb-4 md:mb-6 grid grid-cols-2 md:flex md:flex-wrap gap-3 items-end bg-white/5">
               <div class="col-span-2 md:flex-1 md:min-w-[100px]">
-                <label class="block text-sm font-bold text-white/70 mb-2 tracking-widest">科目名稱</label>
-                <input type="text" id="new-subject" placeholder="例：國文" class="w-full p-2 chalk-input text-lg" />
+                <label class="block text-sm font-bold text-white/70 mb-1 md:mb-2 tracking-widest">科目名稱</label>
+                <input type="text" id="new-subject" placeholder="例：國文" class="w-full p-2 chalk-input text-base md:text-lg" />
               </div>
-              <div class="col-span-1 md:w-24 lg:w-28">
-                <label class="block text-sm font-bold text-white/70 mb-2 tracking-widest">開始</label>
-                <input type="time" id="new-start" class="w-full p-2 chalk-input text-lg" />
+              <div class="col-span-1 md:w-20 lg:w-24">
+                <label class="block text-sm font-bold text-white/70 mb-1 md:mb-2 tracking-widest">開始</label>
+                <input type="time" id="new-start" class="w-full p-2 chalk-input text-base md:text-lg" />
               </div>
-              <div class="col-span-1 md:w-24 lg:w-28">
-                <label class="block text-sm font-bold text-white/70 mb-2 tracking-widest">結束</label>
-                <input type="time" id="new-end" class="w-full p-2 chalk-input text-lg" />
+              <div class="col-span-1 md:w-20 lg:w-24">
+                <label class="block text-sm font-bold text-white/70 mb-1 md:mb-2 tracking-widest">結束</label>
+                <input type="time" id="new-end" class="w-full p-2 chalk-input text-base md:text-lg" />
               </div>
-              <button id="btn-submit-item" type="button" onclick="addEditingItem()" class="col-span-2 border-2 border-[var(--chalk-green)] text-[var(--chalk-green)] hover:bg-[var(--chalk-green)] hover:text-black p-2 flex items-center gap-1 font-bold transition-all w-full md:w-auto justify-center tracking-widest rounded shadow-sm">
-                <i id="submit-icon" class="ph ph-plus text-xl"></i> <span id="submit-text">新增</span>
+              <button id="btn-submit-item" type="button" onclick="addEditingItem()" class="col-span-2 border-2 border-[var(--chalk-green)] text-[var(--chalk-green)] hover:bg-[var(--chalk-green)] hover:text-black p-2 flex items-center gap-1 font-bold transition-all w-full md:w-auto justify-center tracking-widest rounded shadow-sm text-sm md:text-base">
+                <i id="submit-icon" class="ph ph-plus text-lg"></i> <span id="submit-text">新增</span>
               </button>
             </div>
 
-            <!-- 目前清單 -->
-            <div id="editing-list" class="space-y-3 overflow-y-auto max-h-[30vh] pr-2">
+            <div id="editing-list" class="space-y-2 md:space-y-3 overflow-y-auto max-h-[30vh] pr-2">
             </div>
           </div>
         </div>
 
-        <!-- Modal 底部按鈕 -->
-        <div class="p-5 flex justify-end gap-4 shrink-0 border-t-2 border-white/20 bg-black/30">
-          <button onclick="closeSettings()" class="px-6 py-3 font-bold bg-white/10 text-white/90 hover:text-white border-2 border-white hover:bg-white hover:text-black rounded-lg transition-all tracking-widest text-lg">
+        <div class="p-4 md:p-5 flex justify-end gap-4 shrink-0 border-t-2 border-white/20 bg-black/30">
+          <button onclick="closeSettings()" class="px-6 py-2 md:py-3 font-bold bg-white/10 text-white/90 hover:text-white border-2 border-white hover:bg-white hover:text-black rounded-lg transition-all tracking-widest text-base md:text-lg">
             關閉視窗 (自動儲存)
           </button>
         </div>
@@ -261,9 +266,9 @@
       
       if (appData.schedule.length === 0) {
         container.innerHTML = `
-          <div class="text-center text-white/50 mt-16 flex flex-col items-center w-full">
-            <i class="ph ph-wind text-6xl mb-4 opacity-50"></i>
-            <p class="tracking-widest chalk-text text-xl">黑板上空空如也，請點擊右上角新增考程</p>
+          <div class="text-center text-white/50 mt-10 flex flex-col items-center w-full">
+            <i class="ph ph-wind text-5xl md:text-6xl mb-4 opacity-50"></i>
+            <p class="tracking-widest chalk-text text-lg md:text-xl">黑板上空空如也，請點擊右上角新增考程</p>
           </div>
         `;
         return;
@@ -272,30 +277,30 @@
       container.innerHTML = appData.schedule.map(exam => {
         const isActive = exam.id === activeExamId;
         return `
-          <div class="p-6 md:p-8 transition-all duration-500 relative ${isActive ? 'chalk-box-active scale-105 shadow-[0_0_20px_rgba(254,240,138,0.15)] z-10' : 'chalk-box opacity-80 hover:opacity-100'} flex-1 min-w-[280px] max-w-[380px] flex-shrink-0 group">
+          <div class="p-4 md:p-5 transition-all duration-500 relative ${isActive ? 'chalk-box-active scale-105 shadow-[0_0_20px_rgba(254,240,138,0.15)] z-10' : 'chalk-box opacity-80 hover:opacity-100'} flex-1 min-w-[200px] max-w-[340px] flex-shrink-1 group">
             
-            <div class="absolute top-4 right-4 flex gap-3 z-20">
+            <div class="absolute top-2 right-2 flex gap-2 z-20">
               <button onclick="editFromMain('${exam.id}')" class="text-white/60 hover:text-[var(--chalk-yellow)] transition-colors bg-[#26302c]/50 rounded-full p-1.5" title="修改">
-                <i class="ph ph-pencil-simple text-2xl md:text-3xl"></i>
+                <i class="ph ph-pencil-simple text-xl md:text-2xl"></i>
               </button>
               <button onclick="deleteFromMain('${exam.id}')" class="text-white/60 hover:text-[var(--chalk-red)] transition-colors bg-[#26302c]/50 rounded-full p-1.5" title="擦除">
-                <i class="ph ph-eraser text-2xl md:text-3xl"></i>
+                <i class="ph ph-eraser text-xl md:text-2xl"></i>
               </button>
             </div>
 
-            <div class="flex flex-col gap-2 h-full justify-center pt-2">
+            <div class="flex flex-col gap-1 md:gap-2 h-full justify-center pt-2">
               <div class="flex justify-between items-center mb-1">
-                <span class="text-4xl md:text-5xl font-bold tracking-widest leading-none pr-20 ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">
+                <span class="text-2xl md:text-4xl font-bold tracking-widest leading-none pr-16 ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">
                   ${exam.subject}
                 </span>
-                ${isActive ? `<span class="absolute -top-4 -left-4 text-[var(--chalk-yellow)] border-2 border-[var(--chalk-yellow)] bg-[#26302c] text-sm font-bold px-4 py-1.5 tracking-[0.2em] rounded-full animate-pulse whitespace-nowrap shadow-lg">進行中</span>` : ''}
+                ${isActive ? `<span class="absolute -top-3 -left-3 text-[var(--chalk-yellow)] border border-[var(--chalk-yellow)] bg-[#26302c] text-xs font-bold px-2 py-1 md:px-3 md:py-1.5 tracking-[0.2em] rounded-full animate-pulse whitespace-nowrap shadow-lg">進行中</span>` : ''}
               </div>
               
-              <div class="flex items-center gap-5 mt-6">
-                <i class="ph ${isActive ? 'ph-hourglass-high text-[var(--chalk-yellow)] animate-pulse' : 'ph-clock text-white/50'} text-5xl"></i>
-                <div class="flex flex-col border-l-2 ${isActive ? 'border-[var(--chalk-yellow)]' : 'border-white/30'} pl-5 py-1 gap-3">
-                  <span class="tracking-[0.1em] font-mono text-3xl md:text-4xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.startTime}</span>
-                  <span class="tracking-[0.1em] font-mono text-3xl md:text-4xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.endTime}</span>
+              <div class="flex items-center gap-3 md:gap-4 mt-3 md:mt-4">
+                <i class="ph ${isActive ? 'ph-hourglass-high text-[var(--chalk-yellow)] animate-pulse' : 'ph-clock text-white/50'} text-3xl md:text-4xl"></i>
+                <div class="flex flex-col border-l-2 ${isActive ? 'border-[var(--chalk-yellow)]' : 'border-white/30'} pl-3 md:pl-4 py-1 gap-1 md:gap-2">
+                  <span class="tracking-[0.1em] font-mono text-xl md:text-3xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.startTime}</span>
+                  <span class="tracking-[0.1em] font-mono text-xl md:text-3xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.endTime}</span>
                 </div>
               </div>
             </div>
@@ -308,24 +313,24 @@
       const listContainer = document.getElementById('editing-list');
       
       if (editingSchedule.length === 0) {
-        listContainer.innerHTML = `<p class="text-center text-white/50 py-6 tracking-widest">無考程項目</p>`;
+        listContainer.innerHTML = `<p class="text-center text-white/50 py-4 tracking-widest">無考程項目</p>`;
         return;
       }
 
       listContainer.innerHTML = editingSchedule.map(item => `
-        <div class="flex justify-between items-center p-3 chalk-box bg-white/5">
-          <div class="flex items-center gap-3 flex-wrap flex-1">
-            <span class="text-xl font-bold w-full md:w-20 chalk-text tracking-widest">${item.subject}</span>
-            <span class="text-white/80 px-3 py-1 font-mono text-lg tracking-widest border-l-2 border-white/30">
+        <div class="flex justify-between items-center p-2 md:p-3 chalk-box bg-white/5">
+          <div class="flex items-center gap-2 md:gap-3 flex-wrap flex-1">
+            <span class="text-lg md:text-xl font-bold w-full md:w-20 chalk-text tracking-widest">${item.subject}</span>
+            <span class="text-white/80 px-2 md:px-3 py-1 font-mono text-sm md:text-lg tracking-widest border-l-2 border-white/30">
               ${item.startTime} - ${item.endTime}
             </span>
           </div>
           <div class="flex items-center gap-1 shrink-0">
-            <button onclick="editEditingItem('${item.id}')" class="text-white/50 hover:text-[var(--chalk-yellow)] p-2 transition-colors">
-              <i class="ph ph-pencil-simple text-2xl"></i>
+            <button onclick="editEditingItem('${item.id}')" class="text-white/50 hover:text-[var(--chalk-yellow)] p-1.5 md:p-2 transition-colors">
+              <i class="ph ph-pencil-simple text-xl md:text-2xl"></i>
             </button>
-            <button onclick="removeEditingItem('${item.id}')" class="text-white/50 hover:text-[var(--chalk-red)] p-2 transition-colors">
-              <i class="ph ph-eraser text-2xl"></i>
+            <button onclick="removeEditingItem('${item.id}')" class="text-white/50 hover:text-[var(--chalk-red)] p-1.5 md:p-2 transition-colors">
+              <i class="ph ph-eraser text-xl md:text-2xl"></i>
             </button>
           </div>
         </div>
@@ -333,7 +338,10 @@
     }
 
     function renderNotes() {
-      document.getElementById('notes-display').textContent = appData.settings.teacherNotes;
+      const notes = appData.settings.teacherNotes;
+      const display = document.getElementById('notes-display');
+      display.textContent = notes;
+      display.style.display = notes ? 'block' : 'none';
     }
 
     function updateClock() {
@@ -376,8 +384,6 @@
         }, 500); 
       }
     }
-
-    // --- 互動邏輯與即時儲存 ---
 
     function autoSaveGlobalSettings() {
       appData.settings.showCountdown = document.getElementById('setting-countdown').checked;
@@ -431,8 +437,8 @@
       currentEditId = null;
       const btn = document.getElementById('btn-submit-item');
       document.getElementById('submit-text').textContent = '新增';
-      document.getElementById('submit-icon').className = 'ph ph-plus text-xl';
-      btn.className = "col-span-2 border-2 border-[var(--chalk-green)] text-[var(--chalk-green)] hover:bg-[var(--chalk-green)] hover:text-black p-2 flex items-center gap-1 font-bold transition-all w-full md:w-auto justify-center tracking-widest rounded shadow-sm";
+      document.getElementById('submit-icon').className = 'ph ph-plus text-lg md:text-xl';
+      btn.className = "col-span-2 border-2 border-[var(--chalk-green)] text-[var(--chalk-green)] hover:bg-[var(--chalk-green)] hover:text-black p-2 flex items-center gap-1 font-bold transition-all w-full md:w-auto justify-center tracking-widest rounded shadow-sm text-sm md:text-base";
     }
 
     function addEditingItem() {
@@ -466,14 +472,12 @@
 
         editingSchedule.sort((a, b) => a.startTime.localeCompare(b.startTime));
         
-        // 即時寫入主畫面
         appData.schedule = [...editingSchedule];
         syncToMainBoard();
         
         renderEditingSchedule();
         resetInputFields(); 
 
-        // 給予「已成功」的視覺回饋
         const btn = document.getElementById('btn-submit-item');
         document.getElementById('submit-text').textContent = '成功儲存！';
         btn.classList.add('bg-[var(--chalk-green)]', 'text-black');
@@ -497,8 +501,8 @@
         
         const btn = document.getElementById('btn-submit-item');
         document.getElementById('submit-text').textContent = '更新';
-        document.getElementById('submit-icon').className = 'ph ph-check text-xl';
-        btn.className = "col-span-2 border-2 border-[var(--chalk-yellow)] text-[var(--chalk-yellow)] hover:bg-[var(--chalk-yellow)] hover:text-black p-2 flex items-center gap-1 font-bold transition-all w-full md:w-auto justify-center tracking-widest rounded shadow-sm";
+        document.getElementById('submit-icon').className = 'ph ph-check text-lg md:text-xl';
+        btn.className = "col-span-2 border-2 border-[var(--chalk-yellow)] text-[var(--chalk-yellow)] hover:bg-[var(--chalk-yellow)] hover:text-black p-2 flex items-center gap-1 font-bold transition-all w-full md:w-auto justify-center tracking-widest rounded shadow-sm text-sm md:text-base";
       }
     }
 
@@ -506,7 +510,6 @@
       editingSchedule = editingSchedule.filter(item => item.id !== id);
       if (currentEditId === id) resetInputFields();
       
-      // 即時寫入主畫面
       appData.schedule = [...editingSchedule];
       syncToMainBoard();
       
