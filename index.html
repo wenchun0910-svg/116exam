@@ -109,12 +109,12 @@
   <!-- 主容器 (移除滾動，改為高度滿版且內容置中) -->
   <div class="flex-1 w-full flex flex-col min-h-0 overflow-hidden">
     
-    <!-- 上方：巨大時鐘與叮嚀區塊 (高度自適應) -->
-    <div class="w-full flex flex-col justify-center items-center pt-4 md:pt-8 pb-2 shrink-0 z-10">
-      <div id="clock-display" class="font-bold tracking-[0.1em] tabular-nums text-center chalk-text" style="font-size: clamp(4rem, 14vh, 15rem); line-height: 1;">
+    <!-- 上方：巨大時鐘與叮嚀區塊 (高度自適應，字體放大) -->
+    <div class="w-full flex flex-col justify-center items-center pt-6 md:pt-10 pb-2 shrink-0 z-10">
+      <div id="clock-display" class="font-bold tracking-[0.1em] tabular-nums text-center chalk-text" style="font-size: clamp(6rem, 22vh, 25rem); line-height: 1;">
         --:--:--
       </div>
-      <div id="notes-display" class="text-lg md:text-2xl mt-2 md:mt-4 tracking-widest chalk-text-yellow px-6 text-center max-w-4xl leading-relaxed">
+      <div id="notes-display" class="text-2xl md:text-4xl mt-4 md:mt-6 tracking-widest chalk-text-yellow px-6 text-center max-w-5xl leading-relaxed">
       </div>
     </div>
 
@@ -278,32 +278,37 @@
       container.innerHTML = appData.schedule.map(exam => {
         const isActive = exam.id === activeExamId;
         return `
-          <div class="p-4 md:p-5 transition-all duration-500 relative ${isActive ? 'chalk-box-active scale-105 shadow-[0_0_20px_rgba(254,240,138,0.15)] z-10' : 'chalk-box opacity-80 hover:opacity-100'} flex-1 min-w-[200px] max-w-[340px] flex-shrink-1 group">
+          <div class="p-4 md:p-5 transition-all duration-500 relative ${isActive ? 'chalk-box-active scale-105 shadow-[0_0_20px_rgba(254,240,138,0.15)] z-10' : 'chalk-box opacity-80 hover:opacity-100'} w-auto flex-shrink-0 group">
             
-            <div class="absolute top-2 right-2 flex gap-2 z-20">
-              <button onclick="editFromMain('${exam.id}')" class="text-white/60 hover:text-[var(--chalk-yellow)] transition-colors bg-[#26302c]/50 rounded-full p-1.5" title="修改">
-                <i class="ph ph-pencil-simple text-xl md:text-2xl"></i>
-              </button>
-              <button onclick="deleteFromMain('${exam.id}')" class="text-white/60 hover:text-[var(--chalk-red)] transition-colors bg-[#26302c]/50 rounded-full p-1.5" title="擦除">
-                <i class="ph ph-eraser text-xl md:text-2xl"></i>
-              </button>
-            </div>
+            ${isActive ? `<span class="absolute -top-3 -left-3 text-[var(--chalk-yellow)] border border-[var(--chalk-yellow)] bg-[#26302c] text-xs font-bold px-2 py-1 md:px-3 md:py-1.5 tracking-[0.2em] rounded-full animate-pulse whitespace-nowrap shadow-lg z-30">進行中</span>` : ''}
 
-            <div class="flex flex-col gap-1 md:gap-2 h-full justify-center pt-2">
-              <div class="flex justify-between items-center mb-1">
-                <span class="text-2xl md:text-4xl font-bold tracking-widest leading-none pr-16 ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">
+            <div class="flex flex-col gap-1 md:gap-2 h-full justify-center pt-1">
+              
+              <!-- 將科目名稱與編輯圖示放在同一行，並拉近距離 -->
+              <div class="flex items-center gap-3 mb-1">
+                <span class="text-2xl md:text-4xl font-bold tracking-widest leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">
                   ${exam.subject}
                 </span>
-                ${isActive ? `<span class="absolute -top-3 -left-3 text-[var(--chalk-yellow)] border border-[var(--chalk-yellow)] bg-[#26302c] text-xs font-bold px-2 py-1 md:px-3 md:py-1.5 tracking-[0.2em] rounded-full animate-pulse whitespace-nowrap shadow-lg">進行中</span>` : ''}
+                
+                <div class="flex gap-1 z-20 opacity-60 hover:opacity-100 transition-opacity">
+                  <button onclick="editFromMain('${exam.id}')" class="text-white/70 hover:text-[var(--chalk-yellow)] transition-colors bg-[#26302c]/50 rounded-full p-1.5" title="修改">
+                    <i class="ph ph-pencil-simple text-xl md:text-2xl"></i>
+                  </button>
+                  <button onclick="deleteFromMain('${exam.id}')" class="text-white/70 hover:text-[var(--chalk-red)] transition-colors bg-[#26302c]/50 rounded-full p-1.5" title="擦除">
+                    <i class="ph ph-eraser text-xl md:text-2xl"></i>
+                  </button>
+                </div>
               </div>
               
-              <div class="flex items-center gap-3 md:gap-4 mt-3 md:mt-4">
+              <!-- 下方時間區塊 -->
+              <div class="flex items-center gap-3 md:gap-4 mt-2 md:mt-3 pr-2">
                 <i class="ph ${isActive ? 'ph-hourglass-high text-[var(--chalk-yellow)] animate-pulse' : 'ph-clock text-white/50'} text-3xl md:text-4xl"></i>
                 <div class="flex flex-col border-l-2 ${isActive ? 'border-[var(--chalk-yellow)]' : 'border-white/30'} pl-3 md:pl-4 py-1 gap-1 md:gap-2">
                   <span class="tracking-[0.1em] font-mono text-xl md:text-3xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.startTime}</span>
                   <span class="tracking-[0.1em] font-mono text-xl md:text-3xl leading-none ${isActive ? 'chalk-text-yellow' : 'chalk-text'}">${exam.endTime}</span>
                 </div>
               </div>
+              
             </div>
           </div>
         `;
